@@ -17,7 +17,16 @@ import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.util.DatabaseOpener;
 public class DictionaryDao extends DatabaseOpener {
 
     private static final String RETRIEVE_TERMS = "select zword from zpaliviet1";
+
     private static final String RETRIEVE_TERM_FROM_ID = "select * from zpaliviet1 where zword = ";
+
+    private static final String SET_FAVORITE_ON = "update zpaliviet1 set zisfavorite = 1 where zword = ";
+
+    private static final String SET_FAVORITE_OFF = "update zpaliviet1 set zisfavorite = null where zword = ";
+
+    private static final String RETRIEVE_NOTE = "select znote from zfavorite where zword = ";
+
+    private static final String SET_NOTE = "update zfavorite set znote = ? where zword = ?";
 
     /**
      * Default flag for database is: OPEN_READWRITE.
@@ -61,7 +70,7 @@ public class DictionaryDao extends DatabaseOpener {
 
             String favoriteText = cursor.getString(3);
 
-            if (favoriteText == null || favoriteText.isEmpty() || favoriteText.equals("0")) {
+            if (favoriteText == null) {
                 isFavorite = false;
             }
 
@@ -75,8 +84,46 @@ public class DictionaryDao extends DatabaseOpener {
     public void turnOnFavorite(String term) throws IOException {
         SQLiteDatabase database = openDatabase();
 
-
+        String script = SET_FAVORITE_ON + '\"' + term + '\"';
+        database.execSQL(script);
 
         database.close();
+    }
+
+    public void turnOffFavotite(String term) throws IOException {
+        SQLiteDatabase database = openDatabase();
+
+        String script = SET_FAVORITE_OFF + '\"' + term + '\"';
+        database.execSQL(script);
+
+        database.close();
+    }
+
+    public String retrieveNote(String term) throws IOException {
+        SQLiteDatabase database = openDatabase();
+
+        String result = "";
+
+        String script = RETRIEVE_NOTE + '\"' + term + '\"';
+        Cursor cursor = database.rawQuery(script, null);
+        if (cursor.moveToFirst()) {
+            result = cursor.getString(0);
+        }
+
+        database.close();
+        return result;
+    }
+
+    public void setNote(String term, String note) throws IOException {
+        SQLiteDatabase database = openDatabase();
+
+        String[] args = {note, term};
+        database.execSQL(SET_NOTE, args);
+
+        database.close();
+    }
+
+
+    public void removeNote(String mTerm) {
     }
 }

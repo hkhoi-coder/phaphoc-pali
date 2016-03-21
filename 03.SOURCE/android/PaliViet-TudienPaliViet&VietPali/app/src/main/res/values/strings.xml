@@ -19,4 +19,5 @@
     <string name="choose_email_client">Chon app E-mail</string>
     <string name="email_not_found">Khong Tim Thay E-mail</string>
     <string name="input">Tra tu</string>
+    <string name="note">Ghi chu</string>
 </resources>
