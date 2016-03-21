@@ -23,19 +23,32 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Pali - Viet"
-                android:textSize="36sp"
+                android:layout_marginRight="56dp"
                 android:gravity="center"
+                android:text="Pali - Viet"
                 android:textColor="#FFFFFF"
+                android:textSize="36sp"
                 android:textStyle="bold"
-                android:layout_marginRight="56dp"/>
+                android:id="@+id/baseActivity_textView_title"/>
 
         </android.support.v7.widget.Toolbar>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/activity_menu_recyclerView_categories"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_password"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/input"
+                android:id="@+id/activityMain_editText_filter"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <ListView
+            android:id="@+id/activityMain_listView_words"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 

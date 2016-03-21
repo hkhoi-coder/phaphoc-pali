@@ -27,14 +27,10 @@
                 android:textSize="36sp"
                 android:gravity="center"
                 android:textColor="#FFFFFF"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:id="@+id/baseActivity_textView_title"/>
 
         </android.support.v7.widget.Toolbar>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/activity_menu_recyclerView_categories"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
 
     </LinearLayout>
 
