@@ -18,6 +18,8 @@ public class DictionaryDao extends DatabaseOpener {
 
     private static final String RETRIEVE_TERMS = "select zword from zpaliviet1";
 
+    private static final String RETRIEVE_FAVORITE_TERMS = "select zword from zpaliviet1";
+
     private static final String RETRIEVE_TERM_FROM_ID = "select * from zpaliviet1 where zword = ?";
 
     private static final String SET_FAVORITE_ON = "update zpaliviet1 set zisfavorite = 1 where zword = ?";
@@ -45,6 +47,22 @@ public class DictionaryDao extends DatabaseOpener {
 
         List<String> result = new ArrayList<>();
         Cursor cursor = database.rawQuery(RETRIEVE_TERMS, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                result.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        database.close();
+        return result;
+    }
+
+    public List<String> retrieveFavoriteTerms() throws IOException {
+        SQLiteDatabase database = openDatabase();
+
+        List<String> result = new ArrayList<>();
+        Cursor cursor = database.rawQuery(RETRIEVE_FAVORITE_TERMS, null);
 
         if (cursor.moveToFirst()) {
             do {

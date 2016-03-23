@@ -116,6 +116,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 setContentView(R.layout.activity_definition);
                 break;
             case ARCHIVE:
+                setContentView(R.layout.activity_archive);
                 break;
             default:
                 Log.d("debug" , "ERROR - Unknown Activity");
