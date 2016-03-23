@@ -1,12 +1,10 @@
 package paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -38,16 +36,26 @@ public class DefinitionActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initContents();
-
         mTerm = getIntent().getStringExtra(MainActivity.TERM);
+        retrieveTermFromId();
+        inflateContents();
+        setUpSaveButton();
+    }
 
-        try {
-            retrieveTermFromId();
-            inflateContents();
-        } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), "Co loi, vui long thu lai sau", Toast.LENGTH_SHORT).show();
-            Log.d(LOG_CAT, e.getMessage());
-        }
+    private void setUpSaveButton() {
+        mButtonSaved.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentTerm.setFavorite(!mCurrentTerm.isFavorite());
+                if (mCurrentTerm.isFavorite()) {
+                    mButtonSaved.setText("SAVED");
+                    mNote.setVisibility(View.VISIBLE);
+                } else {
+                    mButtonSaved.setText("NOPE");
+                    mNote.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     private void initContents() {
@@ -59,47 +67,28 @@ public class DefinitionActivity extends BaseActivity {
         mNote = (EditText) findViewById(R.id.activityMain_editText_note);
     }
 
-    private void inflateContents() throws IOException {
+    private void inflateContents() {
         mKey.setText(mCurrentTerm.getKey());
         mDefinition.setText(mCurrentTerm.getDefinition());
         mSource.setText(mCurrentTerm.getSource());
 
         if (mCurrentTerm.isFavorite()) {
-            mButtonSaved.setText("YOLO");
+            mButtonSaved.setText("SAVED");
             retrieveAndShowNote();
         }
-        mButtonSaved.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    toggleFavorite();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
-    private void retrieveAndShowNote() throws IOException {
+    private void retrieveAndShowNote() {
         String note = mDictionaryDao.retrieveNote(mTerm);
-        mNote.setText(note);
-        Toast.makeText(getApplicationContext(), note, Toast.LENGTH_SHORT).show();
         mNote.setVisibility(View.VISIBLE);
+        mNote.setText(note);
     }
 
-    private void retrieveTermFromId() throws IOException {
-        mCurrentTerm = mDictionaryDao.retrieveTerm(mTerm);
-    }
-
-    private void toggleFavorite() throws IOException {
-        if (mCurrentTerm.isFavorite()) {
-            mButtonSaved.setText("NOT SAVED");
-            mCurrentTerm.setFavorite(false);
-            mNote.setVisibility(View.GONE);
-        } else {
-            mButtonSaved.setText("YOLO");
-            mCurrentTerm.setFavorite(true);
-            mNote.setVisibility(View.VISIBLE);
+    private void retrieveTermFromId() {
+        try {
+            mCurrentTerm = mDictionaryDao.retrieveTerm(mTerm);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -111,22 +100,10 @@ public class DefinitionActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         if (mCurrentTerm.isFavorite()) {
-            try {
-                mDictionaryDao.turnOnFavorite(mTerm);
-                mDictionaryDao.setNote(mTerm, mNote.getText().toString());
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            mDictionaryDao.saveFavorite(mTerm, mNote.getText().toString());
         } else {
-            try {
-                mDictionaryDao.turnOffFavotite(mTerm);
-                mDictionaryDao.removeNote(mTerm);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            mDictionaryDao.deleteFavorite(mTerm);
         }
     }
 }

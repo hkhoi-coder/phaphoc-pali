@@ -21,7 +21,8 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".activity.DefinitionActivity"></activity>
+        <activity android:name=".activity.DefinitionActivity" />
+        <activity android:name=".activity.ArchiveActivity"></activity>
     </application>
 
 </manifest>

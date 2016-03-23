@@ -3,7 +3,6 @@ package paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.preference.DialogPreference;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -13,14 +12,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
+
+    public static final String PASS_TAG_FAVORITE = "pass_tag";
+    private static final boolean PASS_FAVORITE = true;
 
     protected enum ActivityType {
         MAIN ,
@@ -55,6 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     case R.id.viet_pali:
                         break;
                     case R.id.favorite:
+                        navigateFavorite();
                         break;
                     case R.id.history:
                         break;
@@ -90,6 +91,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
+    }
+
+    private void navigateFavorite() {
+        Intent intent = new Intent(this, ArchiveActivity.class);
+        intent.putExtra(PASS_TAG_FAVORITE, PASS_FAVORITE);
+        startActivity(intent);
     }
 
     private void navigateRatingIntent() {
@@ -138,7 +145,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         try {
             startActivity(Intent.createChooser(sharingIntent, getString(R.string.send_via)));
         } catch (android.content.ActivityNotFoundException e) {
-            Toast.makeText(this, getString(R.string.sharing_app_not_found), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -151,7 +157,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         try {
             startActivity(Intent.createChooser(emailIntent, getString(R.string.choose_email_client)));
         } catch (android.content.ActivityNotFoundException e) {
-            Toast.makeText(this, getString(R.string.email_not_found), Toast.LENGTH_SHORT).show();
         }
     }
 

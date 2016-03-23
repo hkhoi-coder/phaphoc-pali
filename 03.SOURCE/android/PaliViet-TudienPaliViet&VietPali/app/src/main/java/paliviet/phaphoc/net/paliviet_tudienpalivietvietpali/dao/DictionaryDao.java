@@ -18,15 +18,17 @@ public class DictionaryDao extends DatabaseOpener {
 
     private static final String RETRIEVE_TERMS = "select zword from zpaliviet1";
 
-    private static final String RETRIEVE_TERM_FROM_ID = "select * from zpaliviet1 where zword = ";
+    private static final String RETRIEVE_TERM_FROM_ID = "select * from zpaliviet1 where zword = ?";
 
-    private static final String SET_FAVORITE_ON = "update zpaliviet1 set zisfavorite = 1 where zword = ";
+    private static final String SET_FAVORITE_ON = "update zpaliviet1 set zisfavorite = 1 where zword = ?";
 
-    private static final String SET_FAVORITE_OFF = "update zpaliviet1 set zisfavorite = null where zword = ";
+    private static final String SET_FAVORITE_OFF = "update zpaliviet1 set zisfavorite = null where zword = ?";
 
-    private static final String RETRIEVE_NOTE = "select znote from zfavorite where zword = ";
+    private static final String RETRIEVE_NOTE = "select znote from zfavorite where zword = ?";
 
-    private static final String SET_NOTE = "update zfavorite set znote = ? where zword = ?";
+    private static final String SET_NOTE = "insert into zfavorite (zword, znote) values(?, ?)";
+
+    private static final String REMOVE_NOTE = "delete from zfavorite where zword = ?";
 
     /**
      * Default flag for database is: OPEN_READWRITE.
@@ -58,8 +60,8 @@ public class DictionaryDao extends DatabaseOpener {
         SQLiteDatabase database = openDatabase();
         Term result = new Term();
 
-        String script = RETRIEVE_TERM_FROM_ID + '\"' + key + '\"';
-        Cursor cursor = database.rawQuery(script, null);
+        String[] args = {key};
+        Cursor cursor = database.rawQuery(RETRIEVE_TERM_FROM_ID, args);
 
         if (cursor.moveToFirst()) {
             result.setDefinition(cursor.getString(5));
@@ -81,49 +83,52 @@ public class DictionaryDao extends DatabaseOpener {
         return result;
     }
 
-    public void turnOnFavorite(String term) throws IOException {
-        SQLiteDatabase database = openDatabase();
-
-        String script = SET_FAVORITE_ON + '\"' + term + '\"';
-        database.execSQL(script);
-
-        database.close();
-    }
-
-    public void turnOffFavotite(String term) throws IOException {
-        SQLiteDatabase database = openDatabase();
-
-        String script = SET_FAVORITE_OFF + '\"' + term + '\"';
-        database.execSQL(script);
-
-        database.close();
-    }
-
-    public String retrieveNote(String term) throws IOException {
-        SQLiteDatabase database = openDatabase();
-
+    public String retrieveNote(String term) {
         String result = "";
+        try {
+            SQLiteDatabase database = openDatabase();
 
-        String script = RETRIEVE_NOTE + '\"' + term + '\"';
-        Cursor cursor = database.rawQuery(script, null);
-        if (cursor.moveToFirst()) {
-            result = cursor.getString(0);
+            String[] args = {term};
+            Cursor cursor = database.rawQuery(RETRIEVE_NOTE, args);
+
+            if (cursor.moveToFirst()) {
+                result = cursor.getString(0);
+            }
+
+            database.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        database.close();
         return result;
     }
 
-    public void setNote(String term, String note) throws IOException {
-        SQLiteDatabase database = openDatabase();
+    public void saveFavorite(String term, String message) {
+        try {
+            SQLiteDatabase database = openDatabase();
 
-        String[] args = {note, term};
-        database.execSQL(SET_NOTE, args);
+            String[] args = {term, message};
+            String[] arg = {term};
+            database.execSQL(SET_FAVORITE_ON, arg);
+            database.execSQL(SET_NOTE, args);
 
-        database.close();
+            database.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
+    public void deleteFavorite(String term) {
+        try {
+            SQLiteDatabase database = openDatabase();
 
-    public void removeNote(String mTerm) {
+            String[] arg = {term};
+            database.execSQL(SET_FAVORITE_OFF, arg);
+            database.execSQL(REMOVE_NOTE, arg);
+
+            database.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

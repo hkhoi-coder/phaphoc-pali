@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,6 +32,8 @@ public class MainActivity extends BaseActivity {
 
     private ArrayAdapter mArrayAdapter;
 
+    private DictionaryDao mDictionaryDao;
+
     /* DUMMY WORDS PACK */
     private List<String> mTermsList;
 
@@ -44,7 +45,6 @@ public class MainActivity extends BaseActivity {
         try {
             loadDatabase();
         } catch (IOException e) {
-            Toast.makeText(this, "Co loi xay ra, vui long thu lai sau :(", Toast.LENGTH_SHORT).show();
             Log.d(LOG_TAG, e.getMessage());
         }
         setUpListView();
@@ -52,8 +52,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void loadDatabase() throws IOException {
-        DictionaryDao dictionaryDao = new DictionaryDao(this, DATABASE_VIET);
-        mTermsList = dictionaryDao.retrieveTerms();
+        mDictionaryDao = new DictionaryDao(this, DATABASE_VIET);
+        mTermsList = mDictionaryDao.retrieveTerms();
     }
 
     private void setUpFilter() {
@@ -87,7 +87,6 @@ public class MainActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), DefinitionActivity.class);
                 String key = (String) ((TextView) view).getText();
-                Toast.makeText(getApplicationContext(), key, Toast.LENGTH_SHORT).show();
                 intent.putExtra(TERM, key);
                 startActivity(intent);
             }
