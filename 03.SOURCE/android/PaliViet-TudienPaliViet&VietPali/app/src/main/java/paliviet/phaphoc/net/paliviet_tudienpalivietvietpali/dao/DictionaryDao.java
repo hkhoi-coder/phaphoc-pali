@@ -18,7 +18,7 @@ public class DictionaryDao extends DatabaseOpener {
 
     private static final String RETRIEVE_TERMS = "select zword from zpaliviet1";
 
-    private static final String RETRIEVE_FAVORITE_TERMS = "select zword from zpaliviet1";
+    private static final String RETRIEVE_FAVORITE_TERMS = "select zword from zfavorite";
 
     private static final String RETRIEVE_TERM_FROM_ID = "select * from zpaliviet1 where zword = ?";
 
@@ -28,9 +28,11 @@ public class DictionaryDao extends DatabaseOpener {
 
     private static final String RETRIEVE_NOTE = "select znote from zfavorite where zword = ?";
 
-    private static final String SET_NOTE = "insert into zfavorite (zword, znote) values(?, ?)";
+    private static final String INSERT_NOTE = "insert into zfavorite (zword, znote) values(?, ?)";
 
     private static final String REMOVE_NOTE = "delete from zfavorite where zword = ?";
+
+    private static final String UPDATE_NOTE = "update zfavorite set znote = ? where zword = ?";
 
     /**
      * Default flag for database is: OPEN_READWRITE.
@@ -124,11 +126,17 @@ public class DictionaryDao extends DatabaseOpener {
         try {
             SQLiteDatabase database = openDatabase();
 
-            String[] args = {term, message};
+            String test = retrieveNote(term);
             String[] arg = {term};
-            database.execSQL(SET_FAVORITE_ON, arg);
-            database.execSQL(SET_NOTE, args);
 
+            if (test.isEmpty()) {
+                String[] args = {term, message};
+                database.execSQL(SET_FAVORITE_ON, arg);
+                database.execSQL(INSERT_NOTE, args);
+            } else {
+                String[] args = {message, term};
+                database.execSQL(UPDATE_NOTE, args);
+            }
             database.close();
         } catch (IOException e) {
             e.printStackTrace();

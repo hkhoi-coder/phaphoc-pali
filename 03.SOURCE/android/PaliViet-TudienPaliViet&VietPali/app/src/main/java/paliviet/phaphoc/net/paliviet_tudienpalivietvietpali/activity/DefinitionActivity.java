@@ -53,6 +53,7 @@ public class DefinitionActivity extends BaseActivity {
                 } else {
                     mButtonSaved.setText("NOPE");
                     mNote.setVisibility(View.GONE);
+                    mDictionaryDao.deleteFavorite(mTerm);
                 }
             }
         });
@@ -98,12 +99,10 @@ public class DefinitionActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
         if (mCurrentTerm.isFavorite()) {
             mDictionaryDao.saveFavorite(mTerm, mNote.getText().toString());
-        } else {
-            mDictionaryDao.deleteFavorite(mTerm);
         }
     }
 }
