@@ -13,6 +13,8 @@ public class Term {
 
     private boolean favorite;
 
+    private int mode;
+
     public String getKey() {
         return key;
     }
@@ -43,5 +45,13 @@ public class Term {
 
     public void setFavorite(boolean favorite) {
         this.favorite = favorite;
+    }
+
+    public int getMode() {
+        return mode;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 }

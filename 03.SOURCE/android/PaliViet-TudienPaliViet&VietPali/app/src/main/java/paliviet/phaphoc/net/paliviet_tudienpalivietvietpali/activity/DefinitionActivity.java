@@ -11,12 +11,14 @@ import java.io.IOException;
 import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.R;
 import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.dao.DictionaryDao;
 import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.model.Term;
+import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.util.Database;
 
 public class DefinitionActivity extends BaseActivity {
 
     private static final String LOG_CAT = "debug:Defninition";
 
     private String mTerm;
+    private String note;
 
     private Term mCurrentTerm;
 
@@ -28,7 +30,9 @@ public class DefinitionActivity extends BaseActivity {
 
     private Button mButtonSaved;
 
-    private DictionaryDao mDictionaryDao;
+    int mode;
+
+    //private DictionaryDao mDictionaryDao;
 
     private EditText mNote;
 
@@ -37,6 +41,7 @@ public class DefinitionActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         initContents();
         mTerm = getIntent().getStringExtra(MainActivity.TERM);
+        mode = getIntent().getIntExtra(MainActivity.MODE , 0);
         retrieveTermFromId();
         inflateContents();
         setUpSaveButton();
@@ -53,7 +58,8 @@ public class DefinitionActivity extends BaseActivity {
                 } else {
                     mButtonSaved.setText("NOPE");
                     mNote.setVisibility(View.GONE);
-                    mDictionaryDao.deleteFavorite(mTerm);
+                    Database.help(getApplicationContext()).deleteFavorite(mTerm , mode);
+                    //mDictionaryDao.deleteFavorite(mTerm);
                 }
             }
         });
@@ -64,7 +70,7 @@ public class DefinitionActivity extends BaseActivity {
         mDefinition = (TextView) findViewById(R.id.activityDefinition_textView_meaning);
         mSource = (TextView) findViewById(R.id.activityDefinition_textView_source);
         mButtonSaved = (Button) findViewById(R.id.activityDefinition_button_favorite);
-        mDictionaryDao = new DictionaryDao(this, MainActivity.DATABASE_VIET);
+        //mDictionaryDao = new DictionaryDao(this, MainActivity.DATABASE_VIET);
         mNote = (EditText) findViewById(R.id.activityMain_editText_note);
     }
 
@@ -72,6 +78,7 @@ public class DefinitionActivity extends BaseActivity {
         mKey.setText(mCurrentTerm.getKey());
         mDefinition.setText(mCurrentTerm.getDefinition());
         mSource.setText(mCurrentTerm.getSource());
+        mNote.setText(note);
 
         if (mCurrentTerm.isFavorite()) {
             mButtonSaved.setText("SAVED");
@@ -80,14 +87,15 @@ public class DefinitionActivity extends BaseActivity {
     }
 
     private void retrieveAndShowNote() {
-        String note = mDictionaryDao.retrieveNote(mTerm);
+        String note = Database.help(getApplicationContext()).retrieveNote(mTerm);
         mNote.setVisibility(View.VISIBLE);
         mNote.setText(note);
     }
 
     private void retrieveTermFromId() {
         try {
-            mCurrentTerm = mDictionaryDao.retrieveTerm(mTerm);
+            mCurrentTerm = Database.help(getApplicationContext()).retrieveTerm(mTerm , mode);
+            note = Database.help(getApplicationContext()).retrieveNote(mCurrentTerm.getKey());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -102,7 +110,7 @@ public class DefinitionActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         if (mCurrentTerm.isFavorite()) {
-            mDictionaryDao.saveFavorite(mTerm, mNote.getText().toString());
+            Database.help(getApplicationContext()).saveFavorite(mTerm, mNote.getText().toString() , mode);
         }
     }
 }

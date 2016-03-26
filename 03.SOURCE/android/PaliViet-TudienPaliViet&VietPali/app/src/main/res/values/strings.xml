@@ -1,23 +1,23 @@
 <resources>
-    <string name="app_name">Pali Viet - Tu dien Pali Viet &amp; Viet Pali</string>
-    <string name="pali_viet">Pali - Viet</string>
-    <string name="viet_pali">Viet - Pali</string>
-    <string name="favorite">Yeu Thich</string>
-    <string name="history">Lich Su</string>
-    <string name="feedback">Phan Hoi</string>
-    <string name="rating">Danh Gia</string>
-    <string name="sharing">Chia Se</string>
-    <string name="help">Tro Giup</string>
+    <string name="app_name">Pali Việt - Từ điển Pali Việt &amp; Việt Pali</string>
+    <string name="pali_viet">Pali - Việt</string>
+    <string name="viet_pali">Việt - Pali</string>
+    <string name="favorite">Yêu Thích</string>
+    <string name="history">Lịch Sử</string>
+    <string name="feedback">Phản Hồi</string>
+    <string name="rating">Đánh Giá</string>
+    <string name="sharing">Chia Sẻ</string>
+    <string name="help">Trợ Giúp</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
-    <string name="sharing_subject">Chia se app</string>
-    <string name="sharing_text">Link toi GooglePlay</string>
-    <string name="send_via">Chia se qua</string>
+    <string name="sharing_subject">Chia sẻ app</string>
+    <string name="sharing_text">Link tới GooglePlay</string>
+    <string name="send_via">Chia sẻ qua</string>
     <string name="sharing_app_not_found">Error - App not found</string>
     <string name="google_play_url">market://details?id=</string>
     <string name="feeback_email">contact@phaphoc.net</string>
-    <string name="choose_email_client">Chon app E-mail</string>
-    <string name="email_not_found">Khong Tim Thay E-mail</string>
-    <string name="input">Tra tu</string>
-    <string name="note">Ghi chu</string>
+    <string name="choose_email_client">Chọn app E-mail</string>
+    <string name="email_not_found">Không tìm thấy E-mail</string>
+    <string name="input">Tra từ</string>
+    <string name="note">Ghi chú</string>
 </resources>

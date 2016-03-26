@@ -12,8 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.R;
 
@@ -26,18 +28,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         MAIN ,
         WORD ,
         ARCHIVE
-    }
+    };
 
     protected DrawerLayout drawerLayout;
     protected Toolbar toolbar;
     protected ActionBar actionBar;
     protected NavigationView navigationView;
+    protected TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUpLayout();
 
+        title = (TextView) findViewById(R.id.baseActivity_textView_title);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -51,13 +55,16 @@ public abstract class BaseActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.pali_viet:
+                        navigatePaliViet();
                         break;
                     case R.id.viet_pali:
+                        navigateVietPali();
                         break;
                     case R.id.favorite:
                         navigateFavorite();
                         break;
                     case R.id.history:
+                        navigateHistory();
                         break;
                     case R.id.feedback:
                         navigateFeedback();
@@ -91,12 +98,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
-    }
-
-    private void navigateFavorite() {
-        Intent intent = new Intent(this, ArchiveActivity.class);
-        intent.putExtra(PASS_TAG_FAVORITE, PASS_FAVORITE);
-        startActivity(intent);
     }
 
     private void navigateRatingIntent() {
@@ -162,6 +163,34 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void navigatePaliViet() {
+        Intent paliViet = new Intent(this , MainActivity.class);
+        paliViet.putExtra(MainActivity.MODE, 0);
+        //paliViet.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        finish();
+        startActivity(paliViet);
+    }
 
+    private void navigateVietPali() {
+        Intent vietPali = new Intent(this , MainActivity.class);
+        vietPali.putExtra(MainActivity.MODE, 1);
+        //vietPali.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        finish();
+        startActivity(vietPali);
+    }
+
+    private void navigateFavorite() {
+        Intent intent = new Intent(this, ArchiveActivity.class);
+        intent.putExtra(ArchiveActivity.MODE, 0);
+        intent.putExtra(PASS_TAG_FAVORITE, PASS_FAVORITE);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void navigateHistory() {
+        Intent history = new Intent(this , ArchiveActivity.class);
+        history.putExtra(ArchiveActivity.MODE, 1);
+        //history.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        finish();
+        startActivity(history);
     }
 }

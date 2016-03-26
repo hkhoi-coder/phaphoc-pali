@@ -25,7 +25,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="56dp"
                 android:gravity="center"
-                android:text="Pali - Viet"
+                android:text="Title"
                 android:textColor="#FFFFFF"
                 android:textSize="36sp"
                 android:textStyle="bold"

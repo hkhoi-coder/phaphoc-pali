@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,8 +18,11 @@ import java.util.List;
 
 import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.R;
 import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.dao.DictionaryDao;
+import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.util.Database;
 
 public class MainActivity extends BaseActivity {
+
+    public static final String MODE = "mode";
 
     public static final String DATABASE_VIET = "database.sqlite";
 
@@ -26,13 +30,15 @@ public class MainActivity extends BaseActivity {
 
     public static final String TERM = "term";
 
+    private int mode;
+
     private EditText mFilter;
 
     private ListView mWords;
 
     private ArrayAdapter mArrayAdapter;
 
-    private DictionaryDao mDictionaryDao;
+    //private DictionaryDao mDictionaryDao;
 
     /* DUMMY WORDS PACK */
     private List<String> mTermsList;
@@ -42,18 +48,28 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         initComponents();
 
+        mode = getIntent().getIntExtra(MODE , 0);
         try {
             loadDatabase();
         } catch (IOException e) {
             Log.d(LOG_TAG, e.getMessage());
+        }
+        if (mode == 0)
+        {
+            navigationView.getMenu().findItem(R.id.pali_viet).setChecked(true);
+            title.setText(R.string.pali_viet);
+        }
+        else {
+            navigationView.getMenu().findItem(R.id.viet_pali).setChecked(true);
+            title.setText(R.string.viet_pali);
         }
         setUpListView();
         setUpFilter();
     }
 
     private void loadDatabase() throws IOException {
-        mDictionaryDao = new DictionaryDao(this, DATABASE_VIET);
-        mTermsList = mDictionaryDao.retrieveTerms();
+        //mDictionaryDao = new DictionaryDao(this, DATABASE_VIET);
+        mTermsList = Database.help(getApplicationContext()).retrieveTerms(mode);
     }
 
     private void setUpFilter() {
@@ -87,7 +103,9 @@ public class MainActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), DefinitionActivity.class);
                 String key = (String) ((TextView) view).getText();
+                Database.help(getApplicationContext()).insertHistory(key , mode);
                 intent.putExtra(TERM, key);
+                intent.putExtra(MODE , mode);
                 startActivity(intent);
             }
         });
