@@ -38,8 +38,9 @@ public class Storage {
     public boolean copyAsset(String source ,
                              String target) throws Exception {
         InputStream inputStream = context.getAssets().open(source);
-        if ((new File(target)).getParentFile().mkdir())
+        if ((new File(target)).getParentFile().mkdir()) {
             return false;
+        }
         OutputStream outputStream = new FileOutputStream(target);
         byte[] buffer = new byte[1024];
         int length;

@@ -7,9 +7,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.model.Term;
 
@@ -49,7 +56,17 @@ public class Database extends SQLiteOpenHelper {
         }
         else {
             try {
-                Storage.help(context).copyAsset(NAME , databasePath);
+                InputStream inputStream = context.getAssets().open(NAME);
+                File outDirectory = new File(databasePath);
+                outDirectory.getParentFile().mkdirs();
+                OutputStream outputStream = new FileOutputStream(databasePath);
+
+                byte[] buf = new byte[1024];
+                int byteRead;
+
+                while ((byteRead = inputStream.read(buf)) > 0) {
+                    outputStream.write(buf, 0, byteRead);
+                }
             }
             catch (Exception exception) {
                 Log.d(DEBUG , "" + exception.getMessage());
@@ -203,7 +220,7 @@ public class Database extends SQLiteOpenHelper {
         try {
             database = getReadableDatabase();
 
-            String query = "SELECT \"zviewed_date\" , \"zword\" , \"zid_dic\" FROM \"ZHISTORY\" ORDER BY date(\"zviewed_date\") LIMIT 100";
+            String query = "SELECT \"zviewed_date\" , \"zword\" , \"zid_dic\" FROM \"ZHISTORY\" ORDER BY date(\"zviewed_date\") DESC LIMIT 100";
             //String[] columns = {"zviewed_date" , "zword" , "zid_dic"};
             Cursor cursor = database.rawQuery(query , null);
             if (cursor.moveToFirst())
@@ -228,7 +245,7 @@ public class Database extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put("zword" , term);
             values.put("zid_dic" , mode);
-            values.put("zviewed_date", " time(\"now\") ");
+            values.put("zviewed_date", getDateTime());
             database.insert("zhistory", null, values);
         }
         catch (Exception e)
@@ -236,4 +253,12 @@ public class Database extends SQLiteOpenHelper {
 
         }
     }
+
+    private String getDateTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
 }
