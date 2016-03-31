@@ -220,7 +220,7 @@ public class Database extends SQLiteOpenHelper {
         try {
             database = getReadableDatabase();
 
-            String query = "SELECT \"zviewed_date\" , \"zword\" , \"zid_dic\" FROM \"ZHISTORY\" ORDER BY date(\"zviewed_date\") DESC LIMIT 100";
+            String query = "SELECT \"zviewed_date\" , \"zword\" , \"zid_dic\" FROM \"ZHISTORY\" ORDER BY date(\"zviewed_date\") ASC LIMIT 100";
             //String[] columns = {"zviewed_date" , "zword" , "zid_dic"};
             Cursor cursor = database.rawQuery(query , null);
             if (cursor.moveToFirst())
