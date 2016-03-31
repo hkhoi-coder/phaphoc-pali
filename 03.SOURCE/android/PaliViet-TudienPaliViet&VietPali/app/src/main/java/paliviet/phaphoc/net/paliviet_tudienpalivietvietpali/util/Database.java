@@ -205,11 +205,13 @@ public class Database extends SQLiteOpenHelper {
 
     public void deleteFavorite(String term, int mode) {
         try {
+            String[] arg = {term};
             database = getWritableDatabase();
             ContentValues updateTermValues = new ContentValues();
             updateTermValues.put("zisfavorite", (byte[]) null);
             database.update(dictionaries[mode], updateTermValues, "\"zword\" = \"" + term + "\"", null);
-            database.delete("zfavorite", "'zword' = '" + term + "'", null);
+            database.execSQL(REMOVE_NOTE, arg);
+//            database.delete("zfavorite", "'zword' = '" + term + "'", null);
 
 //            String[] args = {dictionaries[mode], term};
 //            String[] arg = {term};

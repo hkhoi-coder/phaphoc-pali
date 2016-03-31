@@ -2,6 +2,7 @@ package paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,6 +38,8 @@ public class MainActivity extends BaseActivity {
     private ListView mWords;
 
     private ArrayAdapter mArrayAdapter;
+
+    private Toast info;
 
     //private DictionaryDao mDictionaryDao;
 
@@ -102,9 +106,9 @@ public class MainActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), DefinitionActivity.class);
                 String key = (String) ((TextView) view).getText();
-                Database.help(getApplicationContext()).insertHistory(key , mode);
+                Database.help(getApplicationContext()).insertHistory(key, mode);
                 intent.putExtra(TERM, key);
-                intent.putExtra(MODE , mode);
+                intent.putExtra(MODE, mode);
                 startActivity(intent);
             }
         });
@@ -113,10 +117,33 @@ public class MainActivity extends BaseActivity {
     private void initComponents() {
         mFilter = (EditText) findViewById(R.id.activityMain_editText_filter);
         mWords = (ListView) findViewById(R.id.activityMain_listView_words);
+        info = Toast.makeText(getApplication(), R.string.press_once_more, Toast.LENGTH_SHORT);
     }
 
     @Override
     protected ActivityType getType() {
         return ActivityType.MAIN;
+    }
+
+    private boolean backPressedOnce = false;
+
+    @Override
+    public void onBackPressed() {
+        if (backPressedOnce) {
+            super.onBackPressed();
+            info.cancel();
+            finish();
+        } else {
+//            Toast.makeText(getApplication(), R.string.press_once_more, Toast.LENGTH_SHORT).show();
+            info.show();
+            backPressedOnce = true;
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    backPressedOnce = false;
+                }
+            }, 2000);
+        }
     }
 }

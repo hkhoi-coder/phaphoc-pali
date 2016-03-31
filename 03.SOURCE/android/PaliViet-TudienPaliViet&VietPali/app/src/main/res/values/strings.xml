@@ -20,4 +20,5 @@
     <string name="email_not_found">Không tìm thấy E-mail</string>
     <string name="input">Tra từ</string>
     <string name="note">Ghi chú</string>
+    <string name="press_once_more">Nhấn back lần nữa để thoát</string>
 </resources>
