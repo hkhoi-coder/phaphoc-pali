@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.List;
 
 import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.R;
-import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.dao.DictionaryDao;
 import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.util.Database;
 
 public class MainActivity extends BaseActivity {

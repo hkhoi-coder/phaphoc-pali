@@ -45,7 +45,7 @@ public class Database extends SQLiteOpenHelper {
     };
 
     private Database(Context context) {
-        super(context.getApplicationContext() , NAME , null , VERSION);
+        super(context.getApplicationContext(), NAME, null, VERSION);
         //  TODO    Initialize database file
         copyDatabase(context);
     }
@@ -54,8 +54,7 @@ public class Database extends SQLiteOpenHelper {
         String databasePath = Storage.help(context).getDatabasePath(NAME);
         if (Storage.help(context).exists(databasePath)) {
             Log.d(DEBUG, "database already exists");
-        }
-        else {
+        } else {
             try {
                 InputStream inputStream = context.getAssets().open(NAME);
                 File outDirectory = new File(databasePath);
@@ -68,9 +67,8 @@ public class Database extends SQLiteOpenHelper {
                 while ((byteRead = inputStream.read(buf)) > 0) {
                     outputStream.write(buf, 0, byteRead);
                 }
-            }
-            catch (Exception exception) {
-                Log.d(DEBUG , "" + exception.getMessage());
+            } catch (Exception exception) {
+                Log.d(DEBUG, "" + exception.getMessage());
             }
         }
     }
@@ -103,7 +101,7 @@ public class Database extends SQLiteOpenHelper {
 
         List<String> result = new ArrayList<>();
         String[] columns = {"zword"};
-        Cursor cursor = database.query(dictionaries[mode] , columns , null , null , null , null , null);
+        Cursor cursor = database.query(dictionaries[mode], columns, null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -120,8 +118,8 @@ public class Database extends SQLiteOpenHelper {
         database = getReadableDatabase();
 
         List<String> result = new ArrayList<>();
-        String[] columns = {"zword" , "zid_dic"};
-        Cursor cursor = database.query("zfavorite" , columns , null , null , null , null , null);
+        String[] columns = {"zword", "zid_dic"};
+        Cursor cursor = database.query("zfavorite", columns, null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -134,11 +132,11 @@ public class Database extends SQLiteOpenHelper {
         return result;
     }
 
-    public Term retrieveTerm(String key , int mode) throws IOException {
+    public Term retrieveTerm(String key, int mode) throws IOException {
         database = getReadableDatabase();
         Term result = new Term();
 
-        Cursor cursor = database.query(dictionaries[mode] , null , "\"zword\" = \"" + key + "\"", null , null , null , null);
+        Cursor cursor = database.query(dictionaries[mode], null, "\"zword\" = \"" + key + "\"", null, null, null, null);
 
         if (cursor.moveToFirst()) {
             result.setDefinition(cursor.getString(5));
@@ -166,7 +164,7 @@ public class Database extends SQLiteOpenHelper {
             database = getReadableDatabase();
 
             String[] columns = {"znote"};
-            Cursor cursor = database.query("zfavorite" , columns , "\"zword\" = \"" +  term + "\"", null , null , null , null);
+            Cursor cursor = database.query("zfavorite", columns, "\"zword\" = \"" + term + "\"", null, null, null, null);
 
             if (cursor.moveToFirst()) {
                 result = cursor.getString(0);
@@ -179,7 +177,7 @@ public class Database extends SQLiteOpenHelper {
         return result;
     }
 
-    public void saveFavorite(String term, String message , int mode) {
+    public void saveFavorite(String term, String message, int mode) {
         try {
             database = getWritableDatabase();
             ContentValues updateTermValues = new ContentValues();
@@ -187,13 +185,12 @@ public class Database extends SQLiteOpenHelper {
             database.update(dictionaries[mode], updateTermValues, "\"zword\" = \"" + term + "\"", null);
             ContentValues updateFavoriteValues = new ContentValues();
             updateFavoriteValues.put("znote", message);
-            if (0 == database.update("zfavorite" , updateFavoriteValues , "\"zword\" = \"" + term  + "\"", null))
-            {
+            if (0 == database.update("zfavorite", updateFavoriteValues, "\"zword\" = \"" + term + "\"", null)) {
                 ContentValues insertValues = new ContentValues();
-                insertValues.put("zword" , term);
-                insertValues.put("znote" , message);
-                insertValues.put("zid_dic" , mode);
-                database.insert("zfavorite" , null , insertValues);
+                insertValues.put("zword", term);
+                insertValues.put("znote", message);
+                insertValues.put("zid_dic", mode);
+                database.insert("zfavorite", null, insertValues);
             }
             //database.close();
         } catch (Exception e) {
@@ -202,15 +199,22 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
+    private static final String REMOVE_NOTE = "delete from zfavorite where zword = ?";
+
+    private static final String SET_FAVORITE_OFF = "update ? set zisfavorite = null where zword = ?";
+
     public void deleteFavorite(String term, int mode) {
         try {
             database = getWritableDatabase();
-
             ContentValues updateTermValues = new ContentValues();
-            updateTermValues.put("zisfavorite", 0);
+            updateTermValues.put("zisfavorite", (byte[]) null);
             database.update(dictionaries[mode], updateTermValues, "\"zword\" = \"" + term + "\"", null);
             database.delete("zfavorite", "'zword' = '" + term + "'", null);
-            //database.close();
+
+//            String[] args = {dictionaries[mode], term};
+//            String[] arg = {term};
+//            database.execSQL(SET_FAVORITE_OFF, args);
+//            database.execSQL(REMOVE_NOTE, arg);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -223,35 +227,30 @@ public class Database extends SQLiteOpenHelper {
 
             String query = "SELECT \"zviewed_date\" , \"zword\" , \"zid_dic\" FROM \"ZHISTORY\" ORDER BY date(\"zviewed_date\") ASC LIMIT 1000";
             //String[] columns = {"zviewed_date" , "zword" , "zid_dic"};
-            Cursor cursor = database.rawQuery(query , null);
-            if (cursor.moveToFirst())
-            {
+            Cursor cursor = database.rawQuery(query, null);
+            if (cursor.moveToFirst()) {
                 do {
                     results.add(cursor.getString(1));
                     integers.add(cursor.getInt(2));
                 } while (cursor.moveToNext());
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return results;
     }
 
-    public void insertHistory(String term , int mode) {
+    public void insertHistory(String term, int mode) {
         try {
             database = getWritableDatabase();
             String[] arg = {term};
             database.execSQL("delete from zhistory where zword = ?", arg);
             ContentValues values = new ContentValues();
-            values.put("zword" , term);
-            values.put("zid_dic" , mode);
+            values.put("zword", term);
+            values.put("zid_dic", mode);
             values.put("zviewed_date", getDateTime());
             database.insert("zhistory", null, values);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
 
         }
     }

@@ -10,7 +10,6 @@ import android.widget.Toast;
 import java.io.IOException;
 
 import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.R;
-import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.dao.DictionaryDao;
 import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.model.Term;
 import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.util.Database;
 
@@ -60,7 +59,6 @@ public class DefinitionActivity extends BaseActivity {
                     mButtonSaved.setText("NOPE");
                     mNote.setVisibility(View.GONE);
                     Database.help(getApplicationContext()).deleteFavorite(mTerm, mode);
-                    Toast.makeText(getApplicationContext(), "Unsaved", Toast.LENGTH_SHORT).show();
 //                    mDictionaryDao.deleteFavorite(mTerm);
                 }
             }
