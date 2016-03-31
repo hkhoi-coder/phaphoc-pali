@@ -42,7 +42,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/input"
-                android:id="@+id/activityMain_editText_filter"/>
+                android:id="@+id/activityMain_editText_filter"
+                android:layout_marginBottom="10dp"/>
         </android.support.design.widget.TextInputLayout>
 
         <ListView

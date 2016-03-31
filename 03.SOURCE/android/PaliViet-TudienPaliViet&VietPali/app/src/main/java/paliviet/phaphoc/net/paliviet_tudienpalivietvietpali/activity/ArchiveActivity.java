@@ -2,6 +2,7 @@ package paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -132,5 +133,25 @@ public class ArchiveActivity extends BaseActivity {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (backPressedOnce) {
+            super.onBackPressed();
+            info.cancel();
+            finish();
+        } else {
+//            Toast.makeText(getApplication(), R.string.press_once_more, Toast.LENGTH_SHORT).show();
+            info.show();
+            backPressedOnce = true;
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    backPressedOnce = false;
+                }
+            }, 2000);
+        }
     }
 }

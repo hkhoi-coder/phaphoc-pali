@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import paliviet.phaphoc.net.paliviet_tudienpalivietvietpali.R;
 
@@ -23,12 +24,16 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public static final String PASS_TAG_FAVORITE = "pass_tag";
     private static final boolean PASS_FAVORITE = true;
+    protected Toast info;
+    protected boolean backPressedOnce = false;
 
     protected enum ActivityType {
-        MAIN ,
-        WORD ,
+        MAIN,
+        WORD,
         ARCHIVE
-    };
+    }
+
+    ;
 
     protected DrawerLayout drawerLayout;
     protected Toolbar toolbar;
@@ -40,6 +45,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUpLayout();
+
+        info = Toast.makeText(getApplication(), R.string.press_once_more, Toast.LENGTH_SHORT);
 
         title = (TextView) findViewById(R.id.baseActivity_textView_title);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -83,7 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         });
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar ,  R.string.open, R.string.close) {
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 /* TODO: Deal with number of learned and hard words */
@@ -120,12 +127,13 @@ public abstract class BaseActivity extends AppCompatActivity {
                 setContentView(R.layout.activity_archive);
                 break;
             default:
-                Log.d("debug" , "ERROR - Unknown Activity");
+                Log.d("debug", "ERROR - Unknown Activity");
                 break;
         }
     }
 
     protected abstract ActivityType getType();
+
     private void navigateHelpIntent() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Unknown")
@@ -163,7 +171,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void navigatePaliViet() {
-        Intent paliViet = new Intent(this , MainActivity.class);
+        Intent paliViet = new Intent(this, MainActivity.class);
         paliViet.putExtra(MainActivity.MODE, 0);
         //paliViet.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         finish();
@@ -171,7 +179,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void navigateVietPali() {
-        Intent vietPali = new Intent(this , MainActivity.class);
+        Intent vietPali = new Intent(this, MainActivity.class);
         vietPali.putExtra(MainActivity.MODE, 1);
         //vietPali.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         finish();
@@ -187,7 +195,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void navigateHistory() {
-        Intent history = new Intent(this , ArchiveActivity.class);
+        Intent history = new Intent(this, ArchiveActivity.class);
         history.putExtra(ArchiveActivity.MODE, 1);
         //history.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         finish();

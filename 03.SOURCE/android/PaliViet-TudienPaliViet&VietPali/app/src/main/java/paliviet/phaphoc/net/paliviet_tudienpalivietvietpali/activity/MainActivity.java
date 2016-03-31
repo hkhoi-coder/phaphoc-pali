@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,8 +37,6 @@ public class MainActivity extends BaseActivity {
     private ListView mWords;
 
     private ArrayAdapter mArrayAdapter;
-
-    private Toast info;
 
     //private DictionaryDao mDictionaryDao;
 
@@ -117,15 +114,12 @@ public class MainActivity extends BaseActivity {
     private void initComponents() {
         mFilter = (EditText) findViewById(R.id.activityMain_editText_filter);
         mWords = (ListView) findViewById(R.id.activityMain_listView_words);
-        info = Toast.makeText(getApplication(), R.string.press_once_more, Toast.LENGTH_SHORT);
     }
 
     @Override
     protected ActivityType getType() {
         return ActivityType.MAIN;
     }
-
-    private boolean backPressedOnce = false;
 
     @Override
     public void onBackPressed() {

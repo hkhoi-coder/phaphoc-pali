@@ -24,6 +24,8 @@ public class DefinitionActivity extends BaseActivity {
 
     private TextView mKey;
 
+    private TextView mTitle;
+
     private TextView mDefinition;
 
     private TextView mSource;
@@ -72,9 +74,11 @@ public class DefinitionActivity extends BaseActivity {
         mButtonSaved = (Button) findViewById(R.id.activityDefinition_button_favorite);
         //mDictionaryDao = new DictionaryDao(this, MainActivity.DATABASE_VIET);
         mNote = (EditText) findViewById(R.id.activityMain_editText_note);
+        mTitle = (TextView) findViewById(R.id.baseActivity_textView_title);
     }
 
     private void inflateContents() {
+        mTitle.setText(mTerm);
         mKey.setText(mCurrentTerm.getKey());
         mDefinition.setText(mCurrentTerm.getDefinition());
         mSource.setText(mCurrentTerm.getSource());
