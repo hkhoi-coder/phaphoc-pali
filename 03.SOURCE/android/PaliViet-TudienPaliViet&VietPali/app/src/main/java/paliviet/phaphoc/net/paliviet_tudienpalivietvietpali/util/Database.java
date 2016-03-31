@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -220,7 +221,7 @@ public class Database extends SQLiteOpenHelper {
         try {
             database = getReadableDatabase();
 
-            String query = "SELECT \"zviewed_date\" , \"zword\" , \"zid_dic\" FROM \"ZHISTORY\" ORDER BY date(\"zviewed_date\") ASC LIMIT 100";
+            String query = "SELECT \"zviewed_date\" , \"zword\" , \"zid_dic\" FROM \"ZHISTORY\" ORDER BY date(\"zviewed_date\") ASC LIMIT 1000";
             //String[] columns = {"zviewed_date" , "zword" , "zid_dic"};
             Cursor cursor = database.rawQuery(query , null);
             if (cursor.moveToFirst())
@@ -241,7 +242,8 @@ public class Database extends SQLiteOpenHelper {
     public void insertHistory(String term , int mode) {
         try {
             database = getWritableDatabase();
-
+            String[] arg = {term};
+            database.execSQL("delete from zhistory where zword = ?", arg);
             ContentValues values = new ContentValues();
             values.put("zword" , term);
             values.put("zid_dic" , mode);

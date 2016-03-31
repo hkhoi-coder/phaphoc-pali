@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -58,8 +59,9 @@ public class DefinitionActivity extends BaseActivity {
                 } else {
                     mButtonSaved.setText("NOPE");
                     mNote.setVisibility(View.GONE);
-                    Database.help(getApplicationContext()).deleteFavorite(mTerm , mode);
-                    //mDictionaryDao.deleteFavorite(mTerm);
+                    Database.help(getApplicationContext()).deleteFavorite(mTerm, mode);
+                    Toast.makeText(getApplicationContext(), "Unsaved", Toast.LENGTH_SHORT).show();
+//                    mDictionaryDao.deleteFavorite(mTerm);
                 }
             }
         });
