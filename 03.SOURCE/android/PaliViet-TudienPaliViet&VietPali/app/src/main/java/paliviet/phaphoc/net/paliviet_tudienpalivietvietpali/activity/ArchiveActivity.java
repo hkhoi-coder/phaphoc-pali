@@ -92,7 +92,7 @@ public class ArchiveActivity extends BaseActivity {
                 Intent intent = new Intent(getApplicationContext(), DefinitionActivity.class);
                 String key = (String) ((TextView) view).getText();
                 intent.putExtra(MainActivity.TERM, key);
-                intent.putExtra(MainActivity.MODE , mode);
+                intent.putExtra(MainActivity.MODE , integers.get(position));
                 startActivity(intent);
             }
         });
