@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -227,7 +228,7 @@ public class Database extends SQLiteOpenHelper {
         try {
             database = getReadableDatabase();
 
-            String query = "SELECT \"zviewed_date\" , \"zword\" , \"zid_dic\" FROM \"ZHISTORY\" ORDER BY date(\"zviewed_date\") ASC LIMIT 1000";
+            String query = "SELECT \"zviewed_date\" , \"zword\" , \"zid_dic\" FROM \"ZHISTORY\" ORDER BY date(\"zviewed_date\") desc LIMIT 1000";
             //String[] columns = {"zviewed_date" , "zword" , "zid_dic"};
             Cursor cursor = database.rawQuery(query, null);
             if (cursor.moveToFirst()) {
@@ -239,6 +240,7 @@ public class Database extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Collections.reverse(results);
         return results;
     }
 

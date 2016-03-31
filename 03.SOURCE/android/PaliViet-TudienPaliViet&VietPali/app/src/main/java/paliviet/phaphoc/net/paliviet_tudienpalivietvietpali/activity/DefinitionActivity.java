@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +31,7 @@ public class DefinitionActivity extends BaseActivity {
 
     private TextView mSource;
 
-    private Button mButtonSaved;
+    private ImageButton mButtonSaved;
 
     int mode;
 
@@ -55,10 +56,10 @@ public class DefinitionActivity extends BaseActivity {
             public void onClick(View v) {
                 mCurrentTerm.setFavorite(!mCurrentTerm.isFavorite());
                 if (mCurrentTerm.isFavorite()) {
-                    mButtonSaved.setText("SAVED");
+                    mButtonSaved.setImageResource(R.drawable.star_solid);
                     mNote.setVisibility(View.VISIBLE);
                 } else {
-                    mButtonSaved.setText("NOPE");
+                    mButtonSaved.setImageResource(R.drawable.star_empty);
                     mNote.setVisibility(View.GONE);
                     Database.help(getApplicationContext()).deleteFavorite(mTerm, mode);
 //                    mDictionaryDao.deleteFavorite(mTerm);
@@ -71,7 +72,7 @@ public class DefinitionActivity extends BaseActivity {
         mKey = (TextView) findViewById(R.id.activityDefinition_textView_key);
         mDefinition = (TextView) findViewById(R.id.activityDefinition_textView_meaning);
         mSource = (TextView) findViewById(R.id.activityDefinition_textView_source);
-        mButtonSaved = (Button) findViewById(R.id.activityDefinition_button_favorite);
+        mButtonSaved = (ImageButton) findViewById(R.id.activityDefinition_button_favorite);
         //mDictionaryDao = new DictionaryDao(this, MainActivity.DATABASE_VIET);
         mNote = (EditText) findViewById(R.id.activityMain_editText_note);
         mTitle = (TextView) findViewById(R.id.baseActivity_textView_title);
@@ -85,7 +86,7 @@ public class DefinitionActivity extends BaseActivity {
         mNote.setText(note);
 
         if (mCurrentTerm.isFavorite()) {
-            mButtonSaved.setText("SAVED");
+            mButtonSaved.setImageResource(R.drawable.star_solid);
             retrieveAndShowNote();
         }
     }

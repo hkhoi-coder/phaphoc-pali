@@ -46,13 +46,15 @@
                 android:textStyle="bold"
                 android:layout_marginLeft="@dimen/left_margin"/>
 
-            <Button
-                android:layout_marginLeft="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageButton
+                android:layout_marginLeft="10dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@android:color/transparent"
                 android:id="@+id/activityDefinition_button_favorite"
+                android:scaleType="centerCrop"
                 android:onClick="onClick"
-                android:text="not saved"/>
+                android:src="@drawable/star_empty"/>
 
         </LinearLayout>
 
